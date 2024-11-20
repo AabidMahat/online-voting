@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voter Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900 transition duration-500">
+
+<!-- Dark Mode Toggle -->
+<div class="absolute top-4 right-4">
+    <button id="themeToggle" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">
+        Switch to Dark Mode
+    </button>
+</div>
+
+<!-- Login Card -->
+<div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6 w-full max-w-sm">
+    <h3 class="text-2xl font-semibold text-center text-gray-800 dark:text-gray-200 mb-6">Voter Login</h3>
+
+    <!-- Error Message -->
+    <div
+            th:if="${param.error}"
+            class="bg-red-100 text-red-800 border border-red-400 rounded-lg px-4 py-3 mb-4 text-center">
+        You entered the wrong username/password
+    </div>
+
+    <!-- Login Form -->
+    <form action="#" th:action="@{/authenticateTheUser}" method="POST" class="space-y-4">
+        <!-- Username -->
+        <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
+            <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    required
+                    placeholder="Enter your username"
+                    class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 placeholder-gray-400"
+            />
+        </div>
+
+        <!-- Password -->
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+            <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    placeholder="Enter your password"
+                    class="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 placeholder-gray-400"
+            />
+        </div>
+
+        <!-- Submit Button -->
+        <button
+                type="submit"
+                class="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg shadow-md focus:outline-none transition duration-300">
+            Login
+        </button>
+    </form>
+
+    <!-- Register New User -->
+    <div class="text-center mt-4">
+        <a
+                th:href="@{/register/showRegistrationForm}"
+                class="text-blue-500 hover:underline">
+            Register New User
+        </a>
+    </div>
+</div>
+
+<script>
+    // Toggle between light and dark mode
+    const themeToggle = document.getElementById("themeToggle");
+    const body = document.body;
+
+    themeToggle.addEventListener("click", () => {
+        body.classList.toggle("dark");
+        themeToggle.textContent = body.classList.contains("dark")
+            ? "Switch to Light Mode"
+            : "Switch to Dark Mode";
+    });
+</script>
+
+</body>
+</html>

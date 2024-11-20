@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Election</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<!-- Form Container -->
+<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <!-- Form Header -->
+    <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Register Election</h2>
+
+    <form action="/election/submitData" method="post" enctype="multipart/form-data" class="space-y-6">
+        <!-- Election Name -->
+        <div>
+            <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Election Name</label>
+            <input type="text" id="name" name="name" required placeholder="Enter election name"
+                   class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm placeholder-gray-400">
+        </div>
+
+        <!-- Start Date -->
+        <div class="relative">
+            <label for="startDate" class="block text-sm font-semibold text-gray-700 mb-2">Start Date</label>
+            <div class="relative">
+                <input type="date" id="startDate" name="startDate" required
+                       class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm appearance-none">
+            </div>
+        </div>
+
+        <!-- End Date -->
+        <div class="relative">
+            <label for="endDate" class="block text-sm font-semibold text-gray-700 mb-2">End Date</label>
+            <div class="relative">
+                <input type="date" id="endDate" name="endDate" required
+                       class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm appearance-none">
+            </div>
+        </div>
+
+        <!-- Candidate Photo Drop Zone -->
+        <div class="w-full border-2 border-gray-300 border-dashed rounded-lg p-6 text-center relative dropzone">
+            <input type="file" class="absolute inset-0 w-full h-full opacity-0 z-50" name="electionPhoto" accept="image/*"
+                   onchange="displayPreview(this, 'candidatePreview')" required>
+            <img class="mx-auto h-12 w-12" src="https://www.svgrepo.com/show/357902/image-upload.svg" alt="">
+            <p class="mt-2 text-sm font-medium text-gray-700">Drag and drop or <span
+                    class="text-blue-600 underline">browse</span> to upload candidate photo (PNG, JPG, GIF up to 10MB)</p>
+            <img src="" id="candidatePreview" class="mt-4 mx-auto max-h-40 hidden rounded-md shadow-lg">
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit"
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg shadow-lg transition duration-300">
+            Submit
+        </button>
+    </form>
+</div>
+
+<script>
+    function displayPreview(input, previewId) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.getElementById(previewId);
+                preview.src = e.target.result;
+                preview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Success message fade out
+    document.addEventListener("DOMContentLoaded", function () {
+        const successMessage = document.getElementById("successMessage");
+        if (successMessage) {
+            successMessage.style.opacity = "1";
+            setTimeout(function () {
+                successMessage.style.transition = "opacity 1s ease-in-out";
+                successMessage.style.opacity = "0";
+            }, 3000);
+        }
+    });
+</script>
+
+</body>
+</html>

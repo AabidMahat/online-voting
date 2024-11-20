@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Design</title>
+<!--    <link rel="stylesheet" data-th-href="@{'/output.css'}">-->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<div class="p-6 w-full mx-auto mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <!-- Card Loop for Each Voter -->
+    <div th:each="voter:${voters}"
+         class="w-full p-6 rounded-2xl shadow-lg bg-white hover:shadow-2xl transform transition duration-300 hover:scale-105 mb-6">
+        <div class="flex items-center space-x-6">
+            <div class="w-1/4">
+                <img th:src="${voter.avatar}" alt="Voter Avatar" class="h-40 w-40 object-cover rounded-full shadow-md">
+            </div>
+            <div class="w-3/4">
+                <h4 class="font-semibold text-2xl text-gray-800" th:text="${voter.name}"/>
+                <div class="mt-4 flex items-center text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                         class="h-5 w-5 text-gray-500 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M21 12l-9 5-9-5V7l9 5 9-5v5z"></path>
+                    </svg>
+                    <p class="text-sm truncate" style="max-width: 80%;" th:text="${voter.email}"/>
+                </div>
+                <div class="mt-4 flex items-center text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                         class="h-5 w-5 text-gray-500 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 2v20m10-10H2"></path>
+                    </svg>
+                    <p class="text-sm font-mono">Aadhar Card: <span class="font-semibold"
+                                                                    th:text="${voter.aadharNumber}"/></p>
+                </div>
+                <div class="mt-6">
+                    <!-- Show 'Voted' button if isVoted() is true -->
+                    <button type="button" th:if="${voter.isVoted()}"
+                            class="inline-flex items-center rounded-full bg-green-900 px-6 py-3 text-sm font-medium text-white shadow-md hover:bg-green-700 transform transition duration-200 hover:scale-105 w-30">
+                        <p class="items-center">Voted</p>
+                    </button>
+
+                    <!-- Show 'Not Voted' button if isVoted() is false -->
+                    <div class="flex" style="display: flex; gap: 20px;">
+                        <!-- Not Voted Button -->
+                        <button type="button" th:unless="${voter.isVoted()}"
+                                class="inline-flex items-center rounded-full bg-red-900 px-6 py-3 text-sm font-medium text-white shadow-md hover:bg-red-700 transform transition duration-200 hover:scale-105 w-30">
+                            <p class="items-center">Not Voted</p>
+                        </button>
+                        <!-- Send Email button with onclick function -->
+                        <button
+                                th:attr="onclick=|sendEmail('${voter.email}', '${voter.name}', false)|"
+                                class="text-blue-500 border-0 button  focus:outline-none  transition duration-300 flex items-center space-x-2"
+                        >
+                            <span class="text-green-900 underline decoration-blue-900 underline-offset-4 " >Send Email</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function sendEmail(email, name, isVoted) {
+
+
+        fetch("/email/send-email", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email, name: name, isVoted: isVoted
+            })
+        }).then(response => response.json()).then(data => {
+            if (data.success) {
+                alert('Email sent successfully');
+            } else {
+                alert('Failed to send email');
+            }
+        }).catch(error => console.error('Error:', error));
+    }
+</script>
+</body>
+</html>

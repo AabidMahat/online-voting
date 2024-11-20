@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Statistics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl font-semibold text-center text-gray-800 mb-12">Voting Statistics</h1>
+
+    <!-- Grid layout for charts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- Chart 1: Votes per Party -->
+        <div class="p-6 bg-white shadow-md rounded-lg h-max">
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Votes per Party</h3>
+            <canvas id="partyVotesChart" class="h-64 w-full"></canvas>
+        </div>
+
+        <!-- Chart 2: Gender Distribution of Voters (Using Bar Chart) -->
+        <div class="p-6 bg-white shadow-md rounded-lg h-max">
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Gender Distribution of Voters</h3>
+            <canvas id="genderDistributionChart" class="h-48 w-full"></canvas>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+        <!-- Chart 3: Votes by Age Group -->
+        <div class="p-6 bg-white shadow-md rounded-lg h-max">
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Votes by Age Group</h3>
+            <canvas id="ageGroupChart" class="h-64 w-full"></canvas>
+        </div>
+
+        <!-- Chart 4: Voted vs Not Voted (Using Horizontal Bar Chart) -->
+        <div class="p-6 bg-white shadow-md rounded-lg h-max">
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Voted vs Not Voted</h3>
+            <canvas id="votedChart" class="h-48 w-full"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // Votes per Party
+    const parties = /*[[${parties}]]*/ [];
+    const votesPerParty = /*[[${votesPerParty}]]*/ [];
+
+    // Gender Distribution of Voters
+    const maleVoters = /*[[${maleVoters}]]*/ 0;
+    const femaleVoters = /*[[${femaleVoters}]]*/ 0;
+
+    // Votes by Age Group
+    const ageGroups = /*[[${ageGroups}]]*/ [];
+    const votesByAgeGroup = /*[[${votesByAgeGroup}]]*/ [];
+
+    // Voted vs Not Voted
+    const voted = /*[[${voted}]]*/ 0;
+    const notVoted = /*[[${notVoted}]]*/ 0;
+    /*]]>*/
+
+    // Chart Configurations
+    const partyVotesChartCtx = document.getElementById('partyVotesChart').getContext('2d');
+    new Chart(partyVotesChartCtx, {
+        type: 'bar',
+        data: {
+            labels: parties,
+            datasets: [{
+                label: 'Votes per Party',
+                data: votesPerParty,
+                backgroundColor: ['#4CAF50', '#FFC107', '#FF5722'],
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                y: {beginAtZero: true}
+            }
+        }
+    });
+
+    const genderDistributionChartCtx = document.getElementById('genderDistributionChart').getContext('2d');
+    new Chart(genderDistributionChartCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Male', 'Female'],
+            datasets: [{
+                label: 'Gender Distribution',
+                data: [maleVoters, femaleVoters],
+                backgroundColor: ['#42A5F5', '#FF6384']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                y: {beginAtZero: true}
+            }
+        }
+    });
+
+    const ageGroupChartCtx = document.getElementById('ageGroupChart').getContext('2d');
+    new Chart(ageGroupChartCtx, {
+        type: 'line',
+        data: {
+            labels: ageGroups,
+            datasets: [{
+                label: 'Votes by Age Group',
+                data: votesByAgeGroup,
+                borderColor: '#FF5722',
+                backgroundColor: 'rgba(255,87,34,0.2)',
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                y: {beginAtZero: true}
+            }
+        }
+    });
+
+    const votedChartCtx = document.getElementById('votedChart').getContext('2d');
+    new Chart(votedChartCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Voted', 'Not Voted'],
+            datasets: [{
+                label: 'Voting Status',
+                data: [voted, notVoted],
+                backgroundColor: ['#66BB6A', '#FF7043']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            indexAxis: 'y',
+            scales: {
+                x: {beginAtZero: true}
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
